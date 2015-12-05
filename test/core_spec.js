@@ -42,6 +42,46 @@ describe('application logic', () => {
       }));
     });
 
+    it('puts winner of current vote back to entries', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Trainspotting', '28'),
+          tally: Map({
+            'Trainspotting': 4,
+            '28': 2
+          })
+        }),
+        entries: List.of('Sunshine', 'Millions', 'Test')
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Sunshine', 'Millions')
+        }),
+        entries: List.of('Test', 'Trainspotting')
+      }));
+    });
+
+    it('puts both from tied vote back to entries', () => {
+      const state = Map({
+        vote: Map({
+          pair: List.of('Trainspotting', '28'),
+          tally: Map({
+            'Trainspotting': 2,
+            '28': 2
+          })
+        }),
+        entries: List.of('Sunshine', 'Millions', 'Test')
+      });
+      const nextState = next(state);
+      expect(nextState).to.equal(Map({
+        vote: Map({
+          pair: List.of('Sunshine', 'Millions')
+        }),
+        entries: List.of('Test', 'Trainspotting', '28')
+      }));
+    });
+
   });
 
   describe('vote', () => {
